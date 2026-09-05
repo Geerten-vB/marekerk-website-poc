@@ -7,6 +7,8 @@ subtitle: This text is controlled by Markdown.
 
 This paragraph lives in **`src/content/page.md`**.
 
+Test
+
 A non-technical editor can change this file, commit the change to `main`, and GitHub Actions will rebuild the website.
 
 ## What you can edit
