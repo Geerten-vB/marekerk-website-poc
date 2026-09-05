@@ -1,6 +1,6 @@
 FROM node:22-alpine
 
-WORKDIR /app
+WORKDIR /marekerk-website-poc
 
 COPY package*.json ./
 RUN npm install
