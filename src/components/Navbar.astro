@@ -1,45 +1,42 @@
 ---
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const formatLabel = (value) =>
-  value
+function formatLabel(value) {
+  return value
     .replace(/[-_]/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase());
+}
 
-const contentDir = fileURLToPath(new URL('../content', import.meta.url));
+const markdownFiles = Object.entries(import.meta.glob('../content/**/*.md', { eager: true }));
 
-const navItems = fs
-  .readdirSync(contentDir, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory())
-  .map((entry) => entry.name)
-  .sort()
-  .map((folderName) => {
-    const folderPath = path.join(contentDir, folderName);
+const navItems = Object.entries(
+  markdownFiles.reduce((groups, [filePath]) => {
+    const slug = filePath
+      .replace(/\\/g, '/')
+      .replace(/^.*?content\//, '')
+      .replace(/\.md$/, '');
 
-    const links = fs
-      .readdirSync(folderPath, { withFileTypes: true })
-      .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
-      .map((entry) => entry.name)
-      .sort()
-      .map((fileName) => {
-        const rawName = fileName.replace(/\.md$/, '');
-        const label = rawName
-          .replace(/[-_]/g, ' ')
-          .replace(/\b\w/g, (char) => char.toUpperCase());
+    const segments = slug.split('/').filter(Boolean);
 
-        return {
-          label,
-          href: `#${folderName}-${rawName}`,
-        };
-      });
+    if (segments.length < 2 || segments[1] === 'index') {
+      return groups;
+    }
 
-    return {
-      label: formatLabel(folderName),
-      links,
-    };
-  });
+    const [folderName, fileName] = segments;
+    const group = groups[folderName] ?? [];
+
+    group.push({
+      label: formatLabel(fileName),
+      href: `/${folderName}/${fileName}`,
+    });
+
+    groups[folderName] = group;
+    return groups;
+  }, {})
+)
+  .map(([folderName, links]) => ({
+    label: formatLabel(folderName),
+    links: links.sort((a, b) => a.label.localeCompare(b.label)),
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label));
 ---
 
 <nav class="site-nav" aria-label="Main navigation">
@@ -49,9 +46,7 @@ const navItems = fs
     <div class="nav-groups">
       {navItems.map((group) => (
         <div class="nav-group">
-          <button class="nav-label" type="button" aria-label={group.label}>
-            {group.label}
-          </button>
+          <button class="nav-label" type="button" aria-label={group.label}>{group.label}</button>
 
           <div class="nav-subitems" aria-label={`${group.label} submenu`}>
             {group.links.map((item) => (
