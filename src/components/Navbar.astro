@@ -7,7 +7,7 @@ function formatLabel(value) {
 
 const markdownFiles = Object.entries(import.meta.glob('../content/**/*.md', { eager: true }));
 
-const navItems = Object.entries(
+const navItems = Object.values(
   markdownFiles.reduce((groups, [filePath]) => {
     const slug = filePath
       .replace(/\\/g, '/')
@@ -21,20 +21,26 @@ const navItems = Object.entries(
     }
 
     const [folderName, fileName] = segments;
-    const group = groups[folderName] ?? [];
+    const group = groups[folderName] ?? {
+      label: formatLabel(folderName),
+      href: `/${folderName}/page`,
+      links: [],
+    };
 
-    group.push({
-      label: formatLabel(fileName),
-      href: `/${folderName}/${fileName}`,
-    });
+    if (fileName !== 'page') {
+      group.links.push({
+        label: formatLabel(fileName),
+        href: `/${folderName}/${fileName}`,
+      });
+    }
 
     groups[folderName] = group;
     return groups;
   }, {})
 )
-  .map(([folderName, links]) => ({
-    label: formatLabel(folderName),
-    links: links.sort((a, b) => a.label.localeCompare(b.label)),
+  .map((group) => ({
+    ...group,
+    links: group.links.sort((a, b) => a.label.localeCompare(b.label)),
   }))
   .sort((a, b) => a.label.localeCompare(b.label));
 ---
@@ -46,7 +52,7 @@ const navItems = Object.entries(
     <div class="nav-groups">
       {navItems.map((group) => (
         <div class="nav-group">
-          <button class="nav-label" type="button" aria-label={group.label}>{group.label}</button>
+          <a class="nav-label" href={group.href} aria-label={group.label}>{group.label}</a>
 
           <div class="nav-subitems" aria-label={`${group.label} submenu`}>
             {group.links.map((item) => (
