@@ -1,0 +1,65 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const formatLabel = (value) =>
+  value
+    .replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+
+const contentDir = fileURLToPath(new URL('../content', import.meta.url));
+
+const navItems = fs
+  .readdirSync(contentDir, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort()
+  .map((folderName) => {
+    const folderPath = path.join(contentDir, folderName);
+
+    const links = fs
+      .readdirSync(folderPath, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+      .map((entry) => entry.name)
+      .sort()
+      .map((fileName) => {
+        const rawName = fileName.replace(/\.md$/, '');
+        const label = rawName
+          .replace(/[-_]/g, ' ')
+          .replace(/\b\w/g, (char) => char.toUpperCase());
+
+        return {
+          label,
+          href: `#${folderName}-${rawName}`,
+        };
+      });
+
+    return {
+      label: formatLabel(folderName),
+      links,
+    };
+  });
+---
+
+<nav class="site-nav" aria-label="Main navigation">
+  <div class="container nav-inner">
+    <a class="brand" href="/">Marekerk</a>
+
+    <div class="nav-groups">
+      {navItems.map((group) => (
+        <div class="nav-group">
+          <button class="nav-label" type="button" aria-label={group.label}>
+            {group.label}
+          </button>
+
+          <div class="nav-subitems" aria-label={`${group.label} submenu`}>
+            {group.links.map((item) => (
+              <a href={item.href}>{item.label}</a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,77 @@
+---
+import Navbar from '../components/Navbar.astro';
+import '../styles/global.css';
+
+export function getStaticPaths() {
+  const markdownFiles = Object.keys(import.meta.glob('../content/**/*.md', { eager: true }));
+
+  return markdownFiles
+    .map((filePath) => {
+      const relativePath = filePath
+        .replace(/^.*\/src\/content\//, '')
+        .replace(/\\/g, '/');
+
+      const slug = relativePath.replace(/\.md$/, '');
+
+      if (!slug || slug.includes('index')) {
+        return null;
+      }
+
+      return { params: { slug } };
+    })
+    .filter(Boolean);
+}
+
+const contentPages = Object.fromEntries(
+  Object.entries(import.meta.glob('../content/**/*.md', { eager: true })).map(([filePath, module]) => {
+    const relativePath = filePath
+      .replace(/^.*\/src\/content\//, '')
+      .replace(/\\/g, '/');
+
+    const slug = relativePath.replace(/\.md$/, '');
+    return [slug, module];
+  })
+);
+
+const slug = Astro.params.slug ?? 'home/landing';
+const page = contentPages[slug];
+
+if (!page) {
+  throw new Error(`No content page found for /${slug}`);
+}
+
+const { Content, frontmatter } = page;
+const { title, subtitle } = frontmatter ?? {};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta name="description" content={subtitle || title} />
+  </head>
+
+  <body>
+    <Navbar />
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <span class="eyebrow">Content page</span>
+          <h1>{title}</h1>
+          <p>{subtitle}</p>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <div class="container content-card">
+          <article class="markdown">
+            <Content />
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
