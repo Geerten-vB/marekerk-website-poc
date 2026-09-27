@@ -27,6 +27,11 @@ const navItems = Object.values(
     }
 
     const [folderName, fileName] = segments;
+
+    if (folderName === 'home') {
+      return groups;
+    }
+
     const group = groups[folderName] ?? {
       label: formatLabel(folderName),
       href: buildHref(`${folderName}/page`),

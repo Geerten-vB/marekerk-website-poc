@@ -37,7 +37,7 @@ export function getStaticPaths() {
 }
 
 const slug = toSlug(Astro.params.slug);
-const page = contentPages[slug] ?? contentPages['home/landing'];
+const page = contentPages[slug] ?? contentPages['page'];
 
 if (!page) {
   throw new Error(`No content page found for /${slug}`);
