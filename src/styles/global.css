@@ -23,9 +23,14 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  background: linear-gradient(180deg, #f6f2eb 0%, #f2eadb 100%);
+  background: var(--bg);
   color: var(--ink);
 }
+
+main {
+  background: var(--bg);
+}
+
 a { color: inherit; }
 
 .container {
@@ -157,10 +162,16 @@ nav a {
 
 .hero {
   padding: 80px 0 72px;
-  background:
-    radial-gradient(circle at top left, rgba(178, 138, 82, 0.16), transparent 30%),
-    linear-gradient(135deg, #f5efe5 0%, #ffffff 50%, #f9f2e5 100%);
+  background: var(--paper-strong);
   border-bottom: 1px solid var(--line);
+}
+
+.hero-homepage {
+  padding: 60px 0 56px;
+}
+
+.hero-subpage {
+  padding: 48px 0 44px;
 }
 
 .eyebrow {
@@ -176,21 +187,22 @@ nav a {
 .hero h1 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.7rem, 6vw, 4.8rem);
-  line-height: 1.08;
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+  line-height: 1.12;
   letter-spacing: -0.04em;
   color: var(--ink);
 }
 
 .hero p {
   max-width: 760px;
-  margin: 20px 0 0;
-  font-size: 1.18rem;
+  margin: 16px 0 0;
+  font-size: 1.05rem;
   color: var(--muted);
 }
 
 .content-section {
   padding: 52px 0;
+  background: var(--bg);
 }
 
 .content-card {

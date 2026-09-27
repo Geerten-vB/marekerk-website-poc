@@ -20,9 +20,8 @@ const { title, subtitle } = page.frontmatter;
     <Navbar />
 
     <main>
-      <section class="hero">
+      <section class="hero hero-homepage">
         <div class="container">
-          <span class="eyebrow">Gemeente Marekerk</span>
           <h1>{title}</h1>
           <p>{subtitle}</p>
         </div>
@@ -36,16 +35,7 @@ const { title, subtitle } = page.frontmatter;
         </div>
       </section>
 
-      <section class="callout">
-        <div class="container">
-          <strong>Gemeente van geloof, gebed en gemeenschap.</strong>
-          <span>Iedereen is welkom om te luisteren, te bidden en te delen.</span>
-        </div>
-      </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="container">© {new Date().getFullYear()} Marekerk</div>
-    </footer>
   </body>
 </html>
