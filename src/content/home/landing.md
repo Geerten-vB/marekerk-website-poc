@@ -1,14 +1,14 @@
 ---
-title: Welcome to our website
-subtitle: A small content-driven demo built with Astro.
+title: Welkom bij Marekerk
+subtitle: Een gemeente waar geloof, gebed en gemeenschap centraal staan.
 ---
 
-# Hello 👋
+# Welkom
 
-This page is generated from the content folder and is linked from the navbar.
+Bij Marekerk willen we elkaar ontmoeten in liefde, vertrouwen en christelijke gemeenschap.
 
-## Built for editors
+## Een plek om te groeien
 
-- Add new folders under `src/content`
-- Add markdown files with a `title` in frontmatter
-- The navbar updates automatically
+- We verzamelen ons om samen te bidden
+- We ontmoeten elkaar in een veilige, gastvrije sfeer
+- We willen groeien in geloof en dienstbaarheid
